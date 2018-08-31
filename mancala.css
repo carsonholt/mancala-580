@@ -1,0 +1,88 @@
+div {
+    box-sizing: border-box;
+}
+
+#board {
+  position: relative;
+  display: flex;
+  border: 1px solid black;
+  box-shadow: 5px 5px 5px brown;
+  width: 1200px;
+  height: 300px;
+}
+
+.row {
+	position: absolute;
+	width: 900px;
+	height: 150px;
+	border: 1px solid #666;
+	display: flex;
+}
+
+#row-1 {
+	left: 150px;
+	top: 0;
+}
+
+#row-2 {
+	left: 150px;
+	top: 150px;
+}
+
+.hole {
+	float: left;
+	margin: 25px;
+	width: 100px;
+	height: 100px;
+	border-radius: 75px;
+	border: 1px solid #333;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hole-score {
+	position: absolute;
+	margin: 25px;
+	width: 100px;
+	height: 250px;
+}
+
+.score {
+	text-align: top-left;
+	margin: 2px;
+}
+
+.black {
+  background-color: black;
+}
+
+#hole-score-1 {
+	float: left;
+	left: 0;
+	top: 0;
+}
+
+#hole-score-2 {
+	float: right;
+	right: 0;
+	top: 0;
+}
+
+.pebble {
+  position: relative;
+  margin: 1px;
+  width: 10px;
+  height: 10px;
+  color: black;
+  border-radius: 10px;
+  vertical-align: middle;
+  border: 1px solid #444;
+}
+
+#ui .pebble {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
