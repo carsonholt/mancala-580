@@ -24,7 +24,7 @@ var playerScore = document.getElementById("score-2");
 var newGameButton = document.getElementById("New-Game");
 
 function displayTurn() {
-		displayMessage("It is the " + t[turn] + "'s turn.");
+	displayMessage("It is the " + t[turn] + "'s turn.");
 }
 
 function displayMessage(message) {
@@ -58,6 +58,7 @@ function renderBoard() {
 	
 	botScore.innerHTML = "Computer: " + scores[0];
 	playerScore.innerHTML = "Player: " + scores[1];
+	displayTurn();
 }
 
 function updateBoard() {
@@ -74,7 +75,7 @@ function addPebble(hole) {
 function removePebble(hole) {
 	var pebbles = hole.getElementsByTagName('p');
 	console.log(pebbles.length);
-	hole.removeChild(pebbles[pebbles.length - 1]);
+	hole.removeChild(pebbles[pebbles.length-1]);
 }
 
 function makeMove(row, col) {
@@ -93,10 +94,13 @@ function makeMove(row, col) {
 			} else {
 				col++;
 			}
-		} 
-		
-		board[ORIG_ROW][ORIG_COL]--;
-		removePebble(orig_hole);
+		} 	
+		console.log(orig_hole.children.length + " children");
+		console.log(board[ORIG_ROW][ORIG_COL] + " pebbles");
+		//if (orig_hole.children.length > 0) {			
+			removePebble(orig_hole);
+			board[ORIG_ROW][ORIG_COL]--;
+		//}
 		
 		if (row == 1) {
 			if (col <= 5) {		
@@ -130,12 +134,15 @@ function makeMove(row, col) {
 	console.log("Number of pebbles" + hole.children.length);
 	if (hole.children.length == 1) { // if last hole was empty	
 		if (turn == 0) {
-			col++;		
-			rowElement = document.getElementById("row-" + 2);			
+			col--;		
+			rowElement = document.getElementById("row-" + 2);	
+			addPebble(botHole);
 		} else {
-			col--;
+			col++;
 			rowElement = document.getElementById("row-" + 1);
+			addPebble(playerHole);
 		}
+		removePebble(hole);
 		var oppositeHole = rowElement.childNodes[col];
 		console.log(oppositeHole);
 		for (var i = oppositeHole.children.length; i > 0; i--) {
@@ -149,7 +156,10 @@ function makeMove(row, col) {
 		}
 	}
 	
-	turn = 1 - turn;
+	turn ^= 1;
+	console.log("turn " + t[turn]);
+	displayTurn();
+	updateBoard();
 }
 
 function emptyBoard(turn) {
@@ -158,12 +168,41 @@ function emptyBoard(turn) {
 		var hole = rowElement.childNodes[i];
 		while (board[turn][i] > 0) {			
 			removePebble(hole);
+			scores[turn]++;
+			if (turn == 0) {
+				addPebble(botHole);
+			} else {
+				addPebble(playerHole);
+			}
 		}
+	}
+}
+
+function wait() {
+	console.log("waiting")
+}
+
+function botRoutine() {
+	do {
+		var randCol = Math.floor(Math.random() * NUM_COLS);
+		if (botRow.childNodes[randCol].children.length > 0) {
+			setTimeout(function() { makeMove(turn, randCol)}, 2000);
+		}
+	} while (board[turn][randCol] < 1);
+}
+
+function determineWinner() {
+	if (scores[0] > scores[1]) {
+		displayMessage("Bot wins");
+	} else if (scores[0] == scores[1]) {
+		displayMessage("Tie");
+	} else {
+		displayMessage("Player wins");
 	}
 }
 // render board
 renderBoard();
-displayTurn();
+//displayTurn();
 
 //Attach click listeners to the bottom row's holes
 var holes = document.getElementById("row-" + 2).getElementsByClassName("hole");
@@ -185,6 +224,7 @@ holes[0].addEventListener('click', function(event) {
 		makeMove(turn, 0);
 		displayTurn();
 		updateBoard();
+		botRoutine();
 	}
 });
 holes[1].addEventListener('click', function(event) {
@@ -193,7 +233,8 @@ holes[1].addEventListener('click', function(event) {
 	if (turn == 1 && board[turn][1] > 0) {
 		makeMove(turn, 1);
 		displayTurn();	
-		updateBoard();		
+		updateBoard();	
+		botRoutine();
 	}
 });
 holes[2].addEventListener('click', function(event) {
@@ -203,6 +244,7 @@ holes[2].addEventListener('click', function(event) {
 		makeMove(turn, 2);
 		displayTurn();
 		updateBoard();
+		botRoutine();
 	}
 });
 holes[3].addEventListener('click', function(event) {
@@ -212,6 +254,7 @@ holes[3].addEventListener('click', function(event) {
 		makeMove(turn, 3);
 		displayTurn();
 		updateBoard();
+		botRoutine();
 	}
 });
 holes[4].addEventListener('click', function(event) {
@@ -221,6 +264,7 @@ holes[4].addEventListener('click', function(event) {
 		makeMove(turn, 4);
 		displayTurn();
 		updateBoard();
+		botRoutine();
 	}
 });
 holes[5].addEventListener('click', function(event) {
@@ -230,6 +274,8 @@ holes[5].addEventListener('click', function(event) {
 		makeMove(turn, 5);
 		displayTurn();
 		updateBoard();
+		botRoutine();
+		displayTurn();
 	}
 });
 	
@@ -243,7 +289,7 @@ newGameButton.addEventListener('click', function(event) {
 	location.reload();
 });
 
-botButton.addEventListener('click', function(event) {
+/*botButton.addEventListener('click', function(event) {
 	event.preventDefault();
 	var randCol = Math.floor(Math.random() * NUM_COLS);
 	if (turn == 0 && board[turn][randCol] > 0) {		
@@ -251,11 +297,12 @@ botButton.addEventListener('click', function(event) {
 		displayTurn();
 		updateBoard();
 	}
-});
+});*/
 
 if (!possibleMove) {
 	gameOver = true;
 	emptyBoard();
+	determineWinner();
 }
 //}
 /*while (!gameOver) {
