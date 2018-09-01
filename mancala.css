@@ -49,8 +49,10 @@ div {
 }
 
 .score {
-	text-align: top-left;
+	text-align: top-right;
 	margin: 2px;
+	font-size: 24px;
+	border: 1px solid #333;
 }
 
 .black {
@@ -78,6 +80,21 @@ div {
   border-radius: 10px;
   vertical-align: middle;
   border: 1px solid #444;
+}
+
+.button {
+	/*background-color: #4CAF50; /* Green */
+    border: none;
+    /*color: white;*/
+    padding: 15px 30px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.line-break {
+	width: 100%;
 }
 
 #ui .pebble {
